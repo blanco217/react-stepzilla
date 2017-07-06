@@ -9,7 +9,7 @@ export default class StepZilla extends Component {
     this.state = {
       ...this.getPrevNextBtnState(this.props.startAtStep),
       compState: this.props.startAtStep,
-      navState: this.getNavStates(this.props.startAtStep, this.props.steps.length),
+      navState: this.getNavStates(this.props.startAtStep, this.props.steps.length)
     };
 
     this.hidden = {
@@ -220,7 +220,7 @@ export default class StepZilla extends Component {
     }
   }
 
-  // update step's validation flag
+  // update steps validation flag
   updateStepValidationFlag(val = true) {
     this.props.steps[this.state.compState].validated = val; // note: if a step component returns 'underfined' then treat as "true".
   }
@@ -287,10 +287,8 @@ export default class StepZilla extends Component {
 
   // main render of stepzilla container
   render() {
-    let compToRender;
-
     // clone the step component dynamically and tag it as activeComponent so we can validate it on next. also bind the jumpToStep piping method
-    let cloneExtensions = {
+    const cloneExtensions = {
       jumpToStep: (t) => {
         this.jumpToStep(t);
       }
@@ -299,15 +297,15 @@ export default class StepZilla extends Component {
     const componentPointer = this.props.steps[this.state.compState].component;
 
     // can only update refs if its a regular React component (not a pure component), so lets check that
-    if (componentPointer instanceof Component || // unit test deteceted that instanceof Component can be in either of these locations so test both (not sure why this is the case)
-        (componentPointer.type && componentPointer.type.prototype instanceof Component)) {
-          cloneExtensions.ref = 'activeComponent';
+    if (componentPointer instanceof Component || // unit test detecteed that instanceof Component can be in either of these locations so test both (not sure why this is the case)
+      (componentPointer.type && componentPointer.type.prototype instanceof Component)) {
+      cloneExtensions.ref = 'activeComponent';
     }
 
-    compToRender = React.cloneElement(componentPointer, cloneExtensions);
+    const compToRender = React.cloneElement(componentPointer, cloneExtensions);
 
     return (
-      <div className="multi-step" onKeyDown={(evt) => {this.handleKeyDown(evt)}}>
+      <div className="multi-step" onKeyDown={(evt) => { this.handleKeyDown(evt); }}>
           {
               this.props.showSteps
                   ? <ol className="progtrckr">
@@ -321,10 +319,12 @@ export default class StepZilla extends Component {
           <div style={this.props.showNavigation ? {} : this.hidden} className="footer-buttons">
               <button style={this.state.showPreviousBtn ? {} : this.hidden}
                   className="btn btn-prev btn-primary btn-lg pull-left"
+                  type="button"
                   onClick={() => {this.previous()}}>{this.props.backButtonText}</button>
 
               <button style={this.state.showNextBtn ? {} : this.hidden}
                   className="btn btn-next btn-primary btn-lg pull-right"
+                  type="button"
                   onClick={() => {this.next()}}>{this.state.nextStepText}</button>
           </div>
       </div>
